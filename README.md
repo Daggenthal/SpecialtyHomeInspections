@@ -2,7 +2,7 @@
 
 A fast, modern, one-page site for Dad's business, plus a private editor so he can change anything himself and publish with one button.
 
-No frameworks, no databases, nothing to `pip install`. Python 3 (already on Raspberry Pi OS) runs everything. Publishing and backups use rclone (`sudo apt install rclone`).
+No frameworks, no databases, nothing to `pip install`. Python 3 (already on Raspberry Pi OS) runs everything. Publishing uses Cloudflare's `wrangler` tool (needs Node.js 22 or newer, see "Node.js on the Pi").
 
 ## What's in here
 
@@ -15,10 +15,12 @@ No frameworks, no databases, nothing to `pip install`. Python 3 (already on Rasp
 | `editor/` | The editor (server + web interface). Home network only. |
 | `tools/import_old_site.py` | Copies the original logo, badges and photos from the old site, byte for byte. |
 | `tools/original_manifest.json` | SHA-256 fingerprints of every original file and testimonial, taken from the live site on 2026-10-28. |
-| `tools/serve.py` | Small static web server for the Pi. The Cloudflare Tunnel points here. |
-| `tools/hetzner_setup.py` | One-time setup for publishing to Hetzner Webhosting over SFTP. |
+| `tools/serve.py` | Small web server on the Pi. Runs the visit counter (and can serve the site locally). |
+| `tools/hetzner_setup.py` | Older plan: publishing to Hetzner Webhosting over SFTP (not used). |
 | `sitekit/hetzner.py` | Makes the Apache `.htaccess` and the PHP visit counter, uploads with rclone, downloads visits. |
-| `deploy/` | systemd services (editor, backups, health check), Windows icon installer, Cloudflare and tunnel examples. |
+| `sitekit/cloudflare.py` | Connect Cloudflare and the Website setup checks (domain, email, live site). |
+| `deploy/wrangler.jsonc`, `deploy/www-redirect/` | The Cloudflare website, and the tiny Worker that sends `www.` to the bare address. |
+| `deploy/` | systemd services (editor, backups, health check), Windows icon installer, tunnel example. |
 | `tools/setup_pi.py` | Sets up or repairs everything on the Pi in one go. Safe to re-run. |
 | `tools/healthcheck.py` | Daily check of the site, certificate, domain, email record, backups; phone alerts. |
 | `tools/backup.py` | Nightly backups to the Pi's M.2 and to Hetzner, and restores. |
@@ -29,27 +31,22 @@ No frameworks, no databases, nothing to `pip install`. Python 3 (already on Rasp
 ## How it's set up 🧭
 
 ```
- Dad's Windows PC                Raspberry Pi (at home)                 Hetzner Webhosting
- "Website Editor" icon  --Tailscale-->  editor (port 8787)  --SFTP Publish-->  the live site
- (an Edge window, nothing             backups on the M.2         <--visit counts--   PHP counter
-  stored on his PC)                   daily copy  ---------SFTP--------->  ~/backups
+ Dad's Windows PC                Raspberry Pi (at home)                  Cloudflare
+ "Website Editor" icon  --Tailscale-->  editor (port 8787)  --Publish-->  the live site (static files)
+ (an Edge window, nothing             backups on the M.2                  email forwarding: John@ -> Gmail
+  stored on his PC)                   visit counter                       the domain's DNS
 ```
 
 - **The editor only exists on the Pi.** It's reachable from home and over Tailscale, never from the internet.
 - **Dad's PC holds nothing.** A new PC just needs Tailscale and the icon.
-- **The live site is plain files on Hetzner.** There's nothing there to log in to or break into.
+- **The live site is plain files on Cloudflare.** There's nothing there to log in to or break into, and it's free.
+- **Setup lives in the editor.** **Website setup** (top bar) walks through Cloudflare, the domain and the email, and checks each step by itself. The first **Publish to website** asks for the Cloudflare details.
 
 ## Setup checklist ✅
 
-The Pi part is one script. Everything else happens in a web page (konsoleH, GoDaddy, Tailscale) and is listed here in order. Tick things off as you go.
+The Pi part is one script. The rest happens in the editor's **Website setup**, which shows what's done and what's left.
 
-**1. Hetzner (konsoleH)**
-- [ ] Order Webhosting M and add the domain `specialtyhomeinspections.biz` to it. You don't have to move the domain registration; the DNS records in step 4 are enough.
-- [ ] Write down the **SFTP server name** and the **main FTP user**: konsoleH > the domain > Access details > FTP. The setup script asks for both.
-- [ ] Email: create a **forward** `john@specialtyhomeinspections.biz` to `specialtyhomeinspections@gmail.com`. No mailbox needed.
-- [ ] Find the temporary address konsoleH gives the account, to test the site before switching the domain.
-
-**2. The Pi**
+**1. The Pi**
 - [ ] Fit the M.2 HAT and drive. If `lsblk` doesn't show `nvme0n1`, add `dtparam=pciex1` to `/boot/firmware/config.txt` and reboot.
 - [ ] Mount it (skip if the Pi boots from the M.2):
   ```bash
@@ -61,30 +58,28 @@ The Pi part is one script. Everything else happens in a web page (konsoleH, GoDa
   sudo mount -a && sudo mkdir -p /mnt/m2/backups && sudo chown "$USER": /mnt/m2/backups
   ```
 - [ ] Copy the project folder from the Mac to `~/specialty-site` on the Pi, including `content/media/`.
-- [ ] Run the setup and follow what it asks:
+- [ ] Run the setup and follow what it asks. It also installs Node.js 22 and Cloudflare's upload tool:
   ```bash
   cd ~/specialty-site && python3 tools/setup_pi.py
   ```
-  When it gets to Hetzner, it prints a key: paste it into konsoleH > Access details > FTP > SSH keys, then press Enter.
-- [ ] Open the editor and press **Publish**. Check the site at the temporary address from step 1.
 
-**3. The domain (GoDaddy)**
-- [ ] Find the account that holds `specialtyhomeinspections.biz` (spelled `specialty`, see "Domain, DNS and email").
-- [ ] Turn on auto-renew and the registrar lock.
-- [ ] A day before switching, lower the TTL of the records to 300 seconds (or 600, if that's the lowest it allows).
+**2. Cloudflare (in the editor)**
+- [ ] Make a free account at [dash.cloudflare.com](https://dash.cloudflare.com/sign-up).
+- [ ] Create an API token: My Profile > API Tokens > Create Token > "Edit Cloudflare Workers" template. Add **Zone > DNS > Edit**, pick the account and the domain.
+- [ ] Open the editor and press **Publish to website**. It asks for the token and the account ID, checks them, and publishes. The site goes to a temporary `*.workers.dev` address first, so you can click around before the domain moves.
 
-**4. Switch over**
-- [ ] At GoDaddy's DNS, set the records from the table in "Domain, DNS and email" using konsoleH's values.
-- [ ] Wait until `https://specialtyhomeinspections.biz` shows the new site (often minutes, at most a day or two).
-- [ ] konsoleH > SSL Manager: request the free **Let's Encrypt** certificate for the domain and `www`. Hetzner renews it automatically, so there's no renewal job to set up. The daily health check warns you if a renewal ever fails.
-- [ ] Send a test email to `john@` from another address and check it arrives in the Gmail.
+**3. The domain and email (in the editor's Website setup)**
+- [ ] Find the account that holds `specialtyhomeinspections.biz` (spelled `specialty`, see "Domain, DNS and email"). Turn on auto-renew and the registrar lock.
+- [ ] Step 2 of Website setup: add the domain to Cloudflare (Free plan) and change its nameservers at the registrar to Cloudflare's two. **Switch the imported website records to grey "DNS only"** so John@ mail keeps arriving in the meantime.
+- [ ] Step 3: Email Routing, catch-all forward to `specialtyhomeinspections@gmail.com`, verify the Gmail, "Add records and enable". Send a test to John@ from another address.
+- [ ] Step 4: press **Publish to website**. Publish moves the address over by itself: it removes the old website records (never mail or text records), connects the site to the domain, and sends `www.` to the bare address. It only does this once steps 2 and 3 are green, so John@ never stops working.
 - [ ] On the Pi: `python3 tools/setup_pi.py --check`. Everything should be ✅.
-- [ ] A few days later, raise the TTL back to 3600.
 
-**5. Dad's PC**
+**4. Dad's PC**
 - [ ] Copy `dist-windows/Website-Editor-Setup.zip` (the setup script made it) to his PC, unzip it, double-click **Install.cmd**. See "Dad's PC".
 
-**6. Optional, worth it**
+**5. Optional, worth it**
+- [ ] Visit counter on Cloudflare (see "Visitor stats" > "After moving the site to Cloudflare"). Website setup step 5 shows whether it's counting.
 - [ ] Google Search Console (see that section) and his Google Business Profile link.
 - [ ] Limit his PC to the editor in Tailscale (see "Tailscale").
 
@@ -100,23 +95,23 @@ Each step checks first and is skipped if it's already done, so it's safe to run 
 | Tailscale | installed and signed in | installing it and starting `tailscale up` |
 | Editor password | one is set | asking for it |
 | Editor access | home network + Tailscale only, the Pi's Tailscale name allowed | updating `editor/config.json` |
-| Hetzner | key login works, Publish uploads there | running `tools/hetzner_setup.py` |
+| Publishing | Node.js 22+, Cloudflare's upload tool, Cloudflare connected (or Hetzner, if that's the target) | installing Node.js from NodeSource and running `npm ci`; the Cloudflare details are entered in the editor |
 | Backup folder | exists, writable, not on the SD card | asking which drive to use |
 | Services | editor, nightly backup and daily health check installed, up to date and running | installing them into systemd with your user name filled in |
 | Editor answers | the editor page loads | (shows where to look) |
 | Phone alerts | an ntfy topic is set (optional) | making a random topic and sending a test |
-| First backup | a backup succeeded (Pi + Hetzner) | running one |
+| First backup | a backup succeeded | running one |
 | Windows installer | Dad's zip exists for the current Tailscale name | making it |
-| Health check | the live site, certificate, `www`, counter, mail record, domain expiry, Hetzner login, editor, backups, disk space | (lists what's wrong) |
+| Health check | the live site, certificate, `www`, counter, mail record, domain expiry, editor, backups, disk space | (lists what's wrong) |
 
 ### Daily health check and phone alerts 📱
 
 `tools/healthcheck.py` runs every morning and checks:
-- the live site, the certificate (catches a failed Hetzner renewal) and `www`
+- the live site, the certificate and that `www` goes to the bare address
 - the visit counter
 - the mail (MX) record that keeps `john@` forwarding
 - the **domain's expiry date**
-- the Hetzner login, the editor, the last backup, and disk space
+- the editor, the last backup, and disk space (and the Hetzner login, only if that's set up)
 
 If something fails it sends a notification to your phone through [ntfy](https://ntfy.sh) (free, no account; install the app and subscribe to the topic the setup prints). It sends one more when things are fine again. Run it by hand any time: `python3 tools/healthcheck.py`.
 
@@ -176,20 +171,38 @@ python3 tools/backup.py --restore /mnt/m2/backups/specialty-site/specialty-2026-
 sudo systemctl start specialty-editor     # then check the preview and press Publish
 ```
 
-If the Pi is gone entirely, download the latest `specialty-DATE.tar.gz` from Hetzner's `~/backups` with any SFTP program. Restore it, then run `editor/server.py setup` and `tools/hetzner_setup.py` again, since keys and passwords were never in that copy.
+With Cloudflare there's no off-site copy from this script, so keep the M.2 backups somewhere else now and then (or sync `/mnt/m2/backups` to another machine). If the Pi is gone entirely, restore the latest `specialty-DATE.tar.gz` from wherever that copy is. Restore it, then run `editor/server.py setup` and `tools/hetzner_setup.py` again, since keys and passwords were never in that copy.
 
-## Other option: Cloudflare (not used) ☁️
+## Cloudflare (the live site) ☁️
 
-We went with Hetzner. This is kept in case that ever changes: the site is pure static files, so Cloudflare could also serve it from Workers static assets. The Pi would still only run the editor.
+The site is plain static files served by Cloudflare (Workers static assets, free). The Pi only runs the editor. Everything is set up from the editor: **Website setup** in the top bar.
 
-1. **Get control of the domain first.** Ask the old developer (or check the registrar) whose name `specialtyhomeinspections.biz` is registered under. It should be Dad's. You need the account login or the transfer code.
-2. Add the domain to Cloudflare and switch its nameservers to Cloudflare's. Custom domains on Workers only work once Cloudflare manages the nameservers. Optionally transfer the registration to Cloudflare Registrar afterwards.
-3. Create an API token in the Cloudflare dashboard using the "Edit Cloudflare Workers" template. Note your account ID.
-4. On the Pi: `sudo apt install nodejs npm`, then `python3 editor/server.py setup` again and answer yes to Cloudflare. The token is stored in `editor/secrets.env` (mode 600, git-ignored) and never shown in the editor.
-5. Uncomment the `routes` block in `deploy/wrangler.jsonc`.
-6. Publish from the editor. From then on, every Publish goes straight to the real domain. You can keep the `folder` target too, so the Pi copy stays as a backup.
+**What Publish does**
+1. Builds the site into `dist/` (the Hetzner-only files `.htaccess` and `_api/` are left out by `dist/.assetsignore`).
+2. Copies it to the local folder too, if that target is on (a ready-to-serve copy on the Pi).
+3. Uploads it with `wrangler deploy --config deploy/wrangler.jsonc` using the token in `editor/secrets.env` (mode 600, git-ignored, never shown in the editor).
+4. **Only when** the domain's nameservers are Cloudflare's **and** email forwarding is on: removes the old website records for the bare address and `www` (only A, AAAA and CNAME; MX and TXT are never touched), attaches the site to the bare address, and deploys `deploy/www-redirect/` on `www.` so it sends visitors to the bare address. Until then the site stays on its temporary `*.workers.dev` address and the publish result says which step is missing.
 
-## Hetzner Webhosting (the live site) 🌐
+**The token** needs the "Edit Cloudflare Workers" template plus **Zone > DNS > Edit** for the domain. Change it any time in Website setup > Change. If Cloudflare ever rejects it, the publish result says so.
+
+**Undo a publish:** History in the editor brings back any earlier version; publish it again. Cloudflare also keeps its own versions: `npx wrangler rollback --config deploy/wrangler.jsonc` (with the token loaded: `set -a; . editor/secrets.env; set +a`).
+
+### Node.js on the Pi
+
+Cloudflare's upload tool needs Node.js 22 or newer. Raspberry Pi OS ships an older one, so `tools/setup_pi.py` installs it from NodeSource. By hand:
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
+less nodesource_setup.sh                 # read it first
+sudo bash nodesource_setup.sh && sudo apt install -y nodejs
+cd ~/specialty-site && npm ci            # installs the pinned wrangler into node_modules/
+```
+
+On Dad's Windows PC nothing is needed: the editor runs on the Pi.
+
+## Hetzner Webhosting (older plan, not used) 🌐
+
+Kept in case it's ever useful again. Nothing below is needed for the Cloudflare setup. To switch back, run `tools/hetzner_setup.py` and set the publish target to `hetzner` in `editor/config.json`.
 
 How it fits together:
 
@@ -278,15 +291,13 @@ The website now shows **specialtyhomeinspections@gmail.com** (Dad finds Gmail ea
 
 - [ ] Find which GoDaddy account holds the domain (Dad's other login, or the developer's).
 - [ ] Make sure the **registrant is Dad** (the business), not the developer.
-- [ ] Unlock it and get the **transfer code** (also called an auth code or EPP code). Moving the registration to Hetzner is optional: you can keep it at GoDaddy and only change the DNS.
-- [ ] Turn on **auto-renew** and the **registrar lock** wherever it ends up. Check that the renewal email goes to an address someone actually reads.
-- [ ] A day before switching, lower the TTL to 300 seconds. Raise it back to 3600 a few days later.
-- [ ] In konsoleH, make `john@` a **forward** to `specialtyhomeinspections@gmail.com` (no mailbox to check). Test it from another address before switching DNS. Cards and listings can keep the old address until he updates them.
-- [ ] Point the records below at Hetzner (konsoleH shows the exact values).
-- [ ] Verify the domain in Google Search Console with its TXT record.
+- [ ] Turn on **auto-renew** and the **registrar lock**. Check that the renewal email goes to an address someone actually reads. Moving the registration to Cloudflare Registrar later is optional.
+- [ ] Follow the editor's **Website setup**: nameservers to Cloudflare (step 2), Email Routing catch-all to the Gmail (step 3), then Publish (step 4).
+- [ ] After forwarding works, add the anti-spoofing record in Cloudflare > DNS: `_dmarc` TXT `v=DMARC1; p=reject`. Email Routing adds its own SPF record; leave it.
+- [ ] Verify the domain in Google Search Console with its TXT record (Cloudflare can add it for you).
 - [ ] Update his Google Business Profile, Facebook page and the BBB listing to the new site link and email.
 
-### DNS records (fill in from konsoleH)
+### DNS records for Hetzner (older plan, not used)
 
 | Name | Type | Value | Why |
 | --- | --- | --- | --- |

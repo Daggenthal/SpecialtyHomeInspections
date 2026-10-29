@@ -105,8 +105,10 @@ def check_www(host):
         (WARN, f"{other} ends up at {final} instead of {host}")
 
 
-def check_counter(site):
-    code, _, _, _ = get(site.rstrip("/") + "/api/hit", follow=False)
+def check_counter(site, endpoint=""):
+    # on Cloudflare the counter lives on the Pi (e.g. https://stats.<domain>/api/hit), not on the site
+    url = endpoint if endpoint.startswith("https://") else site.rstrip("/") + "/api/hit"
+    code, _, _, _ = get(url, follow=False)
     return (OK, "visit counter answers") if code == 204 else (WARN, f"visit counter answered {code} (expected 204)")
 
 
@@ -180,7 +182,7 @@ def run_all(cfg, content):
         ("Website", lambda: check_site(site, name)),
         ("Certificate", lambda: check_cert(host)),
         ("www address", lambda: check_www(host)),
-        ("Visit counter", lambda: check_counter(site)),
+        ("Visit counter", lambda: check_counter(site, str((content.get("stats") or {}).get("endpoint") or ""))),
         ("Email forwarding", lambda: check_mx(apex)),
         ("Domain renewal", lambda: check_domain_expiry(apex)),
         ("Hetzner login", lambda: check_sftp(cfg)),

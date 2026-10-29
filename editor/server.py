@@ -43,7 +43,8 @@ from sitekit.imagesize import image_size, sniff_type  # noqa: E402
 from sitekit.paths import (CONTENT_FILE, DIST, EDITOR_CONFIG, EDITOR_SECRETS,  # noqa: E402
                            HISTORY_DIR, MEDIA_DIR, SITE_ASSETS)
 from sitekit.validate import validate  # noqa: E402
-from sitekit import hetzner, searchconsole, stats  # noqa: E402
+from sitekit import cloudflare, hetzner, searchconsole, stats  # noqa: E402
+from sitekit.term import debug_on, paint  # noqa: E402
 
 UI_DIR = ROOT / "editor" / "ui"
 DRAFT_FILE = ROOT / "content" / ".draft.json"
@@ -269,7 +270,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
     state: State = None  # set at startup
 
     def log_message(self, fmt, *args):
-        sys.stdout.write("%s %s\n" % (self.client_address[0], fmt % args))
+        msg = fmt % args
+        m = re.search(r'" (\d{3}) ', msg + " ")
+        kind = "error" if m and m.group(1).startswith("5") else "warn" if m and m.group(1).startswith("4") else None
+        line = "%s %s" % (self.client_address[0], msg)
+        sys.stdout.write((paint(kind, line) if kind else line) + "\n")
 
     # ---- response helpers
     def _headers_common(self, ctype, length, extra=None):
@@ -383,6 +388,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self.send_file(UI_DIR / "editor.html")
         if path == "/api/state":
             return self.api_state()
+        if path == "/api/setup":
+            return self.api_setup(parse_qs(url.query))
         if path == "/api/history":
             return self.send_json({"items": history_list()})
         if path.startswith("/api/history/"):
@@ -482,6 +489,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             "issues": {"errors": errors, "warnings": warnings},
             "publishTargets": cfg.get("deploy", {}).get("targets", []),
             "cloudflareReady": bool(sec.get("CLOUDFLARE_API_TOKEN") and sec.get("CLOUDFLARE_ACCOUNT_ID")),
+            "cloudflare": cloudflare.credentials_info(),
             "siteUrl": saved.get("business", {}).get("siteUrl", ""),
         })
 
@@ -502,6 +510,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             "/api/logout": self.api_logout, "/api/draft": self.api_draft, "/api/save": self.api_save,
             "/api/discard-draft": self.api_discard, "/api/publish": self.api_publish,
             "/api/upload": self.api_upload, "/api/media/delete": self.api_media_delete,
+            "/api/cloudflare": self.api_cloudflare,
         }
         fn = routes.get(path)
         if not fn:
@@ -591,6 +600,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
             dep = st.config.get("deploy", {})
             results = publish(dep.get("targets", []), dep.get("folder"), cfg=st.config)
             ok = bool(results) and all(r[1] for r in results)
+            for t, k, m in results:
+                print(paint("ok" if k else "fail", f"{'✓' if k else '✗'} Publish to {t}: {'done' if k else 'failed'}"))
+                if debug_on() or not k:
+                    for line in (m or "").splitlines():
+                        print(paint("dim" if k else "error", "  " + line))
             if ok:
                 atomic_write(PUBLISHED_FILE, json.dumps({
                     "hash": sha(text), "when": _dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -601,6 +615,50 @@ class Handler(http.server.BaseHTTPRequestHandler):
                             "error": None if results else "No publish target is set up yet. Run the setup again."})
         finally:
             st.publish_lock.release()
+
+    # ---- Cloudflare: connect, and the Website setup checklist
+
+    def api_setup(self, q):
+        """Live checks for the Website setup checklist. Cached briefly so reopening it is instant."""
+        st = self.state
+        now = time.time()
+        cached = getattr(st, "setup_cache", None)
+        if cached and now - cached[0] < 30 and "refresh" not in q:
+            return self.send_json(cached[1])
+        data = cloudflare.setup_status(st.current())
+        data["targets"] = st.config.get("deploy", {}).get("targets", [])
+        data["gmail"] = (st.current().get("business") or {}).get("email") or cloudflare.GMAIL_DEFAULT
+        st.setup_cache = (now, data)
+        self.send_json(data)
+
+    def api_cloudflare(self):
+        """Saves the API token and account ID after checking them with Cloudflare.
+        The token is never sent back to the browser."""
+        data = self.read_json() or {}
+        token = str(data.get("token") or "").strip()
+        account = str(data.get("accountId") or "").strip().lower()
+        info = cloudflare.credentials_info()
+        errors = cloudflare.validate_fields(token, account, info["hasToken"])
+        if errors:
+            return self.send_json({"error": "Please check the boxes marked in red.", "fields": errors}, 400)
+        check_token = token or cloudflare.read_secrets().get("CLOUDFLARE_API_TOKEN", "")
+        ok, message = cloudflare.check_credentials(check_token, account)
+        if ok is False:
+            field = "accountId" if "account" in message.lower() and "token works" in message.lower() else "token"
+            return self.send_json({"error": message, "fields": {field: message}}, 400)
+        cloudflare.save_credentials(token or None, account)
+        # publish to Cloudflare from now on (Hetzner is no longer used; a local folder copy stays if set)
+        st = self.state
+        with st.lock:
+            dep = st.config.setdefault("deploy", {})
+            targets = [t for t in dep.get("targets", []) if t != "hetzner"]
+            if "cloudflare" not in targets:
+                targets.append("cloudflare")
+            dep["targets"] = targets
+            save_private(EDITOR_CONFIG, json.dumps(st.config, indent=2) + "\n")
+            st.setup_cache = None
+        print(paint("ok", "✓ Cloudflare connected from the editor (saved to editor/secrets.env)"))
+        self.send_json(dict(cloudflare.credentials_info(), message=message, verified=bool(ok), targets=targets))
 
     def api_upload(self):
         raw_name = unquote(self.headers.get("X-Filename", "photo"))
@@ -755,12 +813,18 @@ def lan_addresses():
 def cmd_run():
     cfg = load_config()
     if not cfg.get("password_hash"):
-        print("No password set yet. Run:  python3 editor/server.py setup")
+        print(paint("fail", "✗ No password set yet. Run:  python3 editor/server.py setup"))
         sys.exit(1)
     Handler.state = State(cfg)
     bind, port = cfg.get("bind", "127.0.0.1"), int(cfg.get("port", 8787))
-    httpd = Server((bind, port), Handler)
-    print(f"Website editor running. Open http://localhost:{port}/ on this computer.")
+    try:
+        httpd = Server((bind, port), Handler)
+    except OSError as e:
+        print(paint("fail", f"✗ Couldn't start the editor on port {port}: {e}. Is it already running?"))
+        sys.exit(1)
+    print(paint("ok", f"✓ Website editor running. Open http://localhost:{port}/ on this computer."))
+    if debug_on():
+        print(paint("warn", "! Debug mode: full publish logs are printed here"))
     if bind not in ("127.0.0.1", "::1", "localhost"):
         for a in lan_addresses():
             print(f"  From another device at home: http://{a}:{port}/  or  http://{socket.gethostname()}.local:{port}/")
@@ -774,7 +838,11 @@ def cmd_run():
 def main():
     ap = argparse.ArgumentParser(description="Specialty Home Inspections website editor")
     ap.add_argument("command", nargs="?", default="run", choices=["run", "setup", "password"])
+    ap.add_argument("--debug", action="store_true", help="print full publish logs (same as SHI_DEBUG=1)")
     args = ap.parse_args()
+    if args.debug:
+        from sitekit.term import set_debug
+        set_debug(True)
     {"run": cmd_run, "setup": cmd_setup, "password": cmd_password}[args.command]()
 
 

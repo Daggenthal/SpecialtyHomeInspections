@@ -19,6 +19,8 @@ content/.trash/
 content/history/
 
 __pycache__/
+node_modules/
+.wrangler/
 *.pyc
 .DS_Store
 

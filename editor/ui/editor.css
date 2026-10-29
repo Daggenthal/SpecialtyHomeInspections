@@ -291,3 +291,29 @@ body.is-dragging, body.is-dragging * { cursor: grabbing !important; user-select:
   .preview-bar .hint { display: none; }
   .choice-grid { grid-template-columns: 1fr; }
 }
+
+/* Website setup + Connect Cloudflare */
+#setupBtn.needs { position: relative; }
+#setupBtn.needs::after { content: ""; position: absolute; top: 6px; right: 6px; width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 2px var(--surface); }
+.setup-list { list-style: none; margin: 8px 0 12px; padding: 0; display: grid; gap: 10px; }
+.setup-step { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; background: var(--surface); }
+.setup-step.is-done { background: var(--okbg); border-color: transparent; }
+.setup-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.setup-top h3 { margin: 0; font-size: 16.5px; flex: 1; min-width: 12em; }
+.setup-num { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff; font-weight: 700; font-size: 14px; flex: none; }
+.is-done .setup-num { background: var(--ok); }
+.setup-detail { margin: 6px 0 0 38px; overflow-wrap: anywhere; }
+.setup-how { margin: 8px 0 0 38px; }
+.setup-how summary { cursor: pointer; font-weight: 600; color: var(--navy); }
+.setup-how ol { margin: 8px 0; padding-left: 20px; display: grid; gap: 6px; }
+.setup-how a { color: var(--navy); font-weight: 600; }
+.cf-field { margin: 12px 0; }
+.cf-label { display: block; font-weight: 700; margin-bottom: 6px; }
+.cf-row { display: flex; gap: 6px; }
+.cf-input { flex: 1; width: 100%; min-width: 0; min-height: 42px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; font: 15px/1.2 ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+.cf-input:focus { outline: 3px solid #9db4ee; outline-offset: 1px; }
+.cf-input[aria-invalid="true"] { border-color: #b4232a; }
+.cf-help a { color: var(--navy); font-weight: 600; }
+.cf-err { margin: 6px 0 0; color: #b4232a; font-weight: 700; font-size: 14px; }
+.cf-err:empty { display: none; }
+@media (max-width: 640px) { .setup-detail, .setup-how { margin-left: 0; } }

@@ -482,3 +482,94 @@ class TestPiSetup(unittest.TestCase):
         spec.loader.exec_module(hc)
         level, _ = hc.check_disk({})
         self.assertIn(level, (hc.OK, hc.WARN, hc.FAIL))
+
+
+class TestCloudflareSetup(unittest.TestCase):
+    """Connect Cloudflare + Website setup. No network: DNS and the upload tool are faked."""
+
+    def setUp(self):
+        import tempfile
+        from sitekit import cloudflare as cf
+        self.cf = cf
+        self.tmp = tempfile.TemporaryDirectory()
+        self.secrets = Path(self.tmp.name) / "secrets.env"
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_fields(self):
+        v = self.cf.validate_fields
+        self.assertEqual(v("A" * 40, "0123456789abcdef0123456789abcdef", False), {})
+        self.assertIn("accountId", v("A" * 40, "nope", False))
+        self.assertIn("token", v("has spaces in it here!!", "0123456789abcdef0123456789abcdef", False))
+        self.assertIn("token", v("", "0123456789abcdef0123456789abcdef", False))
+        self.assertEqual(v("", "0123456789abcdef0123456789abcdef", True), {})  # keep the saved token
+
+    def test_secrets_stay_private(self):
+        import os
+        import stat
+        self.secrets.write_text("HETZNER_THING=keep-me\n", encoding="utf-8")
+        self.cf.save_credentials("Tok_" + "x" * 36 + "9Zq1", "0123456789abcdef0123456789abcdef", path=self.secrets)
+        info = self.cf.credentials_info(path=self.secrets)
+        self.assertTrue(info["ready"])
+        self.assertEqual(info["tokenHint"], "9Zq1")
+        self.assertNotIn("Tok_", json.dumps(info))                       # never sent to the browser
+        self.assertIn("HETZNER_THING=keep-me", self.secrets.read_text())   # other settings survive
+        self.assertEqual(stat.S_IMODE(os.stat(self.secrets).st_mode), 0o600)
+
+    def test_reading_dns(self):
+        self.assertTrue(self.cf.on_cloudflare(["ada.ns.cloudflare.com", "bob.ns.cloudflare.com"]))
+        self.assertFalse(self.cf.on_cloudflare(["ns51.domaincontrol.com", "ns52.domaincontrol.com"]))
+        self.assertFalse(self.cf.on_cloudflare([]))
+        self.assertTrue(self.cf.email_routing_on(["13 route1.mx.cloudflare.net", "86 route2.mx.cloudflare.net"]))
+        self.assertFalse(self.cf.email_routing_on([]))
+        self.assertEqual(self.cf.site_domain(CONTENT), "specialtyhomeinspections.biz")
+        self.assertEqual(self.cf.site_domain({"business": {"siteUrl": "https://www.example.com/x"}}), "example.com")
+
+    def _deploy(self, status, cleared=True):
+        """Run deploy_cloudflare with DNS, the API and wrangler faked; return (ok, message, command)."""
+        from unittest import mock
+        from sitekit import deploy
+        ran = {}
+
+        class R:
+            returncode = 0
+            stdout = "Uploaded specialty-home-inspections\n  https://specialty-home-inspections.someone.workers.dev\n"
+            stderr = ""
+
+        def fake_run(cmd, **kw):
+            if cmd[-1] == "--version":
+                return type("V", (), {"stdout": "v22.11.0"})()
+            ran["cmd"] = cmd
+            return R()
+        with mock.patch.object(deploy, "read_secrets", return_value={"CLOUDFLARE_API_TOKEN": "t" * 40, "CLOUDFLARE_ACCOUNT_ID": "a" * 32}), \
+                mock.patch.object(deploy.shutil, "which", return_value="/usr/bin/node"), \
+                mock.patch.object(self.cf, "domain_status", return_value=status), \
+                mock.patch.object(self.cf, "clear_old_records", return_value=cleared), \
+                mock.patch.object(deploy.subprocess, "run", side_effect=fake_run):
+            import tempfile
+            with tempfile.TemporaryDirectory() as d:
+                (Path(d) / "index.html").write_text("<p>hi</p>")
+                ok, msg = deploy.deploy_cloudflare(dist=Path(d))
+        return ok, msg, ran.get("cmd", [])
+
+    def test_domain_waits_for_email(self):
+        base = {"domain": "specialtyhomeinspections.biz", "nameservers": [], "mx": []}
+        # not on Cloudflare yet: temporary address, no --domain
+        ok, msg, cmd = self._deploy(dict(base, onCloudflare=False, emailRouting=False))
+        self.assertTrue(ok)
+        self.assertNotIn("--domain", cmd)
+        self.assertIn("workers.dev", msg)
+        # on Cloudflare but email forwarding off: still no --domain, so John@ keeps working
+        ok, msg, cmd = self._deploy(dict(base, onCloudflare=True, emailRouting=False))
+        self.assertNotIn("--domain", cmd)
+        self.assertIn("Email forwarding isn't on", msg)
+        # both ready: the site takes the real address, www gets the redirect Worker
+        ok, msg, cmd = self._deploy(dict(base, onCloudflare=True, emailRouting=True))
+        self.assertIn("www.specialtyhomeinspections.biz", cmd)     # the last command run is the www redirect
+        self.assertIn("APEX:specialtyhomeinspections.biz", cmd)
+        self.assertIn("Live at https://specialtyhomeinspections.biz", msg)
+        self.assertIn("www.specialtyhomeinspections.biz sends visitors", msg)
+        # old records couldn't be cleared: stay on the temporary address rather than fail
+        ok, msg, cmd = self._deploy(dict(base, onCloudflare=True, emailRouting=True), cleared=False)
+        self.assertNotIn("--domain", cmd)

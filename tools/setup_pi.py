@@ -234,6 +234,56 @@ def f_hetzner():
     run([sys.executable, "tools/hetzner_setup.py"], capture=False)
 
 
+def uses_cloudflare(cfg=None):
+    targets = ((cfg or load_cfg()).get("deploy") or {}).get("targets", [])
+    return "cloudflare" in targets or "hetzner" not in targets
+
+
+def node_major():
+    node = shutil.which("node")
+    if not node:
+        return 0
+    r = run([node, "--version"])
+    try:
+        return int((r.stdout or "v0").strip().lstrip("v").split(".")[0])
+    except ValueError:
+        return 0
+
+
+def c_publish():
+    """Cloudflare (the current setup) or Hetzner (the older plan), whichever Publish uses."""
+    cfg = load_cfg()
+    if not uses_cloudflare(cfg):
+        return c_hetzner()
+    major = node_major()
+    if major < 22:
+        return False, f"Node.js 22 or newer needed for Cloudflare uploads (found {major or 'none'})"
+    if not (ROOT / "node_modules" / ".bin" / "wrangler").is_file():
+        return False, "Cloudflare's upload tool isn't installed yet (npm ci)"
+    from sitekit import cloudflare
+    if not cloudflare.credentials_info()["ready"]:
+        return False, "Cloudflare isn't connected yet"
+    return True, "publishing to Cloudflare"
+
+
+def f_publish():
+    cfg = load_cfg()
+    if not uses_cloudflare(cfg):
+        return f_hetzner()
+    if node_major() < 22:
+        # NodeSource's official packages; Raspberry Pi OS's own nodejs is too old for wrangler
+        script = ROOT / "data" / "nodesource_setup.sh"
+        script.parent.mkdir(parents=True, exist_ok=True)
+        run(["curl", "-fsSL", "https://deb.nodesource.com/setup_22.x", "-o", str(script)], check=True, timeout=120)
+        run(["bash", str(script)], sudo=True, check=True, timeout=900)
+        run(["apt-get", "install", "-y", "-q", "nodejs"], sudo=True, check=True, timeout=900)
+    if not (ROOT / "node_modules" / ".bin" / "wrangler").is_file():
+        run(["npm", "ci", "--no-audit", "--no-fund"], check=True, timeout=900)
+    from sitekit import cloudflare
+    if not cloudflare.credentials_info()["ready"]:
+        raise RuntimeError("open the editor and press Publish to website; it asks for the two Cloudflare details")
+
+
 def backup_dir():
     return Path((load_cfg().get("backup") or {}).get("local_dir") or "").expanduser()
 
@@ -396,19 +446,19 @@ STEPS = [
     ("password", "Editor password", c_password, f_password, ["python"], "python3 editor/server.py password"),
     ("editornet", "Editor reachable at home + Tailscale only", c_editor_net, f_editor_net, ["tailscale", "password"],
      "Run this again after Tailscale is connected."),
-    ("hetzner", "Publishing to Hetzner (SFTP)", c_hetzner, f_hetzner, ["packages"],
-     "Follow README \"Setup checklist\" (konsoleH key), then python3 tools/hetzner_setup.py --test"),
+    ("publish", "Publishing (Cloudflare)", c_publish, f_publish, ["packages"],
+     "Open the editor > Website setup. It walks through Cloudflare, the domain and the email."),
     ("backupdir", "Backup folder on the M.2", c_backup_dir, f_backup_dir, [], "Mount the M.2 (README, \"Backups\")."),
     ("services", "Editor + nightly backup + daily health check start on boot", c_services, f_services,
      ["editornet", "tests"], "sudo systemctl status specialty-editor"),
     ("editorup", "Editor answers", c_editor_up, None, ["services"], "journalctl -u specialty-editor -n 50"),
     ("notify", "Phone alerts (ntfy)", c_notify, f_notify, [], "python3 tools/healthcheck.py --test-notify"),
-    ("backup", "First backup (Pi + Hetzner)", c_backup_run, f_backup_run, ["backupdir", "hetzner"],
+    ("backup", "First backup", c_backup_run, f_backup_run, ["backupdir"],
      "python3 tools/backup.py shows the error."),
     ("kit", "Dad's Windows icon installer", c_kit, f_kit, ["tailscale", "editorup"],
      "python3 tools/make_windows_kit.py http://<pi's tailscale name>:8787/"),
-    ("health", "Live site health check", c_health, None, ["hetzner"],
-     "Fix what it lists; the README, \"Setup checklist\" covers the DNS and konsoleH parts."),
+    ("health", "Live site health check", c_health, None, ["publish"],
+     "Fix what it lists; the editor's Website setup covers Cloudflare, the domain and the email."),
 ]
 
 

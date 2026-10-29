@@ -1,5 +1,9 @@
 // Cloudflare Workers static site (no server code, just files).
-// The editor's "Publish to website" runs:  npx wrangler@4 deploy --config deploy/wrangler.jsonc
+// The editor's "Publish to website" runs wrangler deploy with this file.
+//
+// The real address is attached automatically on publish, once the editor's Website setup
+// shows the domain is on Cloudflare and email forwarding is on (so John@ keeps working).
+// Until then the site lives on its temporary *.workers.dev address.
 {
   "name": "specialty-home-inspections",
   "compatibility_date": "2026-10-28",
@@ -8,11 +12,4 @@
     "not_found_handling": "404-page"
   },
   "workers_dev": true
-
-  // Once the domain's nameservers point to Cloudflare, uncomment this so the
-  // site answers on the real address (Cloudflare creates the DNS records):
-  // ,"routes": [
-  //   { "pattern": "specialtyhomeinspections.biz", "custom_domain": true },
-  //   { "pattern": "www.specialtyhomeinspections.biz", "custom_domain": true }
-  // ]
 }

@@ -1,0 +1,8 @@
+// The www. address: one tiny Worker that redirects to the bare domain.
+// Publish deploys it with:  wrangler deploy --config deploy/www-redirect/wrangler.jsonc --domain www.<domain> --var APEX:<domain>
+{
+  "name": "specialty-home-inspections-www",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-20",
+  "workers_dev": false
+}

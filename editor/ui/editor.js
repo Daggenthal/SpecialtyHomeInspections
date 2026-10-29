@@ -1242,6 +1242,12 @@
     var go = isDirty() ? save("Saved before publishing") : Promise.resolve(true);
     go.then(function (ok) {
       if (!ok) return;
+      // first time: ask for the Cloudflare details right here, then carry on publishing
+      if (!S.cfReady && window.SHI.connectCloudflare) {
+        return window.SHI.connectCloudflare({ thenPublish: true }).then(function (connected) {
+          if (connected) publishNow(force);
+        });
+      }
       if (!S.targets.length) {
         return dialog("Publishing isn't set up", h("p", { text: "Ask your son to run the editor setup so the website knows where to publish." }));
       }
@@ -1267,9 +1273,15 @@
         if (d.ok) {
           S.published = { hash: S.savedHash, when: new Date().toLocaleString() };
           updateStatus();
-          var link = S.siteUrl ? h("p", null, h("a", { href: S.siteUrl, target: "_blank", rel: "noopener" }, "Open the website ↗")) : null;
+          var cfMsg = (d.results || []).filter(function (r) { return r.target === "cloudflare"; }).map(function (r) { return r.message || ""; }).join("\n");
+          var temporary = /workers\.dev|isn't on Cloudflare yet|Email forwarding isn't on|temporary address/.test(cfMsg);
+          var liveAt = (cfMsg.match(/Live at (https:\/\/\S+)/) || [])[1];
+          var link = (liveAt || S.siteUrl) ? h("p", null, h("a", { href: liveAt || S.siteUrl, target: "_blank", rel: "noopener" }, "Open the website ↗")) : null;
+          var setupNote = temporary && window.SHI.showSetup ? h("p", { class: "result" },
+            "The website is on a temporary address until the setup steps are finished. ",
+            h("button", { type: "button", class: "btn small", onclick: function () { $("#dlg").close(); window.SHI.showSetup(); } }, "Open Website setup")) : null;
           dialog("Your website is updated 🎉", h("div", null,
-            h("p", { text: "Visitors will see the changes right away. If something looks old, they can refresh the page." }), link, rows));
+            h("p", { text: "Visitors will see the changes right away. If something looks old, they can refresh the page." }), link, setupNote, rows));
         } else {
           dialog("Publishing had a problem", h("div", null, h("p", { text: d.error || "Nothing was broken: the website still shows the last version that worked." }), rows));
         }
@@ -1311,7 +1323,8 @@
         h("li", null, h("strong", { text: "Change things on the left. " }), "The preview on the right updates as you type. Click anything in the preview to jump to it."),
         h("li", null, h("strong", { text: "Save " }), "keeps your work on this computer. Nothing changes on the internet yet."),
         h("li", null, h("strong", { text: "Publish to website " }), "puts your saved changes on the real website for everyone."),
-        h("li", null, h("strong", { text: "Made a mistake? " }), "Use Undo, or History to bring back any earlier version.")),
+        h("li", null, h("strong", { text: "Made a mistake? " }), "Use Undo, or History to bring back any earlier version."),
+        h("li", null, h("strong", { text: "Website setup " }), "shows what's left to connect: Cloudflare, the domain and the email. It checks itself.")),
       h("h4", { text: "Writing tips" }),
       h("ul", null,
         h("li", null, "Select words and press ", h("b", { text: "B Bold" }), " to make them bold. They look like **this** in the box."),
@@ -1357,6 +1370,7 @@
     S.media = d.media || [];
     S.targets = d.publishTargets || [];
     S.cfReady = d.cloudflareReady;
+    S.cloudflare = d.cloudflare || {};
     S.siteUrl = d.siteUrl;
     S.content = clone(d.draft || d.saved);
     if (d.draft && JSON.stringify(d.draft) !== JSON.stringify(d.saved)) {

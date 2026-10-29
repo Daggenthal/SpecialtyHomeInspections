@@ -1,0 +1,9 @@
+{
+  "name": "specialty-site",
+  "private": true,
+  "description": "Cloudflare's upload tool for the editor's Publish button. The website itself has no npm dependencies.",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "4.155.0"
+  }
+}

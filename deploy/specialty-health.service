@@ -1,0 +1,13 @@
+# Daily health check (run by specialty-health.timer). See tools/healthcheck.py.
+[Unit]
+Description=Specialty Home Inspections daily health check
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=REPLACE_WITH_YOUR_USER
+WorkingDirectory=/home/REPLACE_WITH_YOUR_USER/specialty-site
+ExecStart=/usr/bin/python3 tools/healthcheck.py --notify
+NoNewPrivileges=true
+PrivateTmp=true

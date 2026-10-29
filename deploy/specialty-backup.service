@@ -1,0 +1,16 @@
+# Daily backup (run by specialty-backup.timer). See tools/backup.py and the README, "Backups".
+# Install:  sudo cp deploy/specialty-backup.service deploy/specialty-backup.timer /etc/systemd/system/
+#           sudo systemctl enable --now specialty-backup.timer
+[Unit]
+Description=Specialty Home Inspections website backup
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=REPLACE_WITH_YOUR_USER
+WorkingDirectory=/home/REPLACE_WITH_YOUR_USER/specialty-site
+ExecStart=/usr/bin/python3 tools/backup.py
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true

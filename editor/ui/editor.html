@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Website Editor | Specialty Home Inspections LLC</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/ui/editor.css">
+<script src="/ui/vendor/qrcode.js" defer></script>
+<script src="/ui/editor.js" defer></script>
+<script src="/ui/insights.js" defer></script>
+</head>
+<body class="editor">
+<header class="bar">
+  <div class="bar-title">
+    <strong>Website Editor</strong>
+    <span id="status" class="pill" aria-live="polite">Loading…</span>
+  </div>
+  <div class="bar-actions">
+    <button class="btn" id="undoBtn" type="button" title="Undo (go back one change)" disabled>↶ Undo</button>
+    <button class="btn" id="redoBtn" type="button" title="Redo" disabled>↷ Redo</button>
+    <button class="btn" id="statsBtn" type="button">📈 Visitors</button>
+    <button class="btn" id="qrBtn" type="button">QR codes</button>
+    <button class="btn" id="historyBtn" type="button">History</button>
+    <button class="btn" id="helpBtn" type="button">Help</button>
+    <button class="btn outline" id="saveBtn" type="button" title="Save (Ctrl+S / ⌘S)">Save</button>
+    <button class="btn primary" id="publishBtn" type="button">Publish to website</button>
+    <button class="btn ghost" id="logoutBtn" type="button">Sign out</button>
+  </div>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+
+<main class="split">
+  <aside class="panel" id="panel" aria-label="Edit the website">
+    <div id="issues" class="issues" hidden></div>
+    <div id="forms"></div>
+    <div id="panelSave" class="panel-save" role="region" aria-label="Save">
+      <span>You have unsaved changes</span>
+      <button class="btn primary small" id="panelSaveBtn" type="button">💾 Save</button>
+    </div>
+  </aside>
+
+  <section class="preview-wrap" aria-label="Preview">
+    <div class="preview-bar">
+      <div class="seg" role="group" aria-label="Preview size">
+        <button type="button" class="seg-btn active" data-device="desktop">Computer</button>
+        <button type="button" class="seg-btn" data-device="tablet">Tablet</button>
+        <button type="button" class="seg-btn" data-device="phone">Phone</button>
+      </div>
+      <span class="muted small hint">Tip: click anything in the preview to jump to where you edit it.</span>
+      <a class="btn small" href="/preview" target="_blank" rel="noopener">Open preview in a new tab</a>
+    </div>
+    <div class="frame-holder" id="frameHolder" data-device="desktop">
+      <iframe id="frameA" class="pframe" title="Website preview" src="/preview?edit=1"></iframe>
+      <iframe id="frameB" class="pframe" title="Website preview" aria-hidden="true"></iframe>
+    </div>
+  </section>
+</main>
+
+<dialog id="dlg" class="dlg"></dialog>
+<dialog id="dlg2" class="dlg narrow"></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="busy" class="busy" hidden><div class="busy-card"><div class="spinner"></div><p id="busyText">Working…</p></div></div>
+<input type="file" id="fileInput" accept="image/*" hidden multiple>
+<div id="printArea" class="print-area" aria-hidden="true"></div>
+</body>
+</html>

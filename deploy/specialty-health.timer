@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily website health check (after the backup)
+
+[Timer]
+OnCalendar=*-*-* 07:41
+RandomizedDelaySec=10m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

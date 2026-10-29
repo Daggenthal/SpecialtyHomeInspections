@@ -1,0 +1,21 @@
+# The website editor (home network and Tailscale only, never put it on the internet).
+# Install:  sudo cp deploy/specialty-editor.service /etc/systemd/system/
+#           sudo systemctl enable --now specialty-editor
+[Unit]
+Description=Specialty Home Inspections website editor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=REPLACE_WITH_YOUR_USER
+WorkingDirectory=/home/REPLACE_WITH_YOUR_USER/specialty-site
+ExecStart=/usr/bin/python3 editor/server.py
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+# Needs to write: content/, data/, dist/ and published/ inside the project.
+ProtectSystem=full
+ReadWritePaths=/home/REPLACE_WITH_YOUR_USER/specialty-site
+
+[Install]
+WantedBy=multi-user.target

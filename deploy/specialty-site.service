@@ -1,0 +1,21 @@
+# Public website files for the Cloudflare Tunnel (localhost only).
+# Install:  sudo cp deploy/specialty-site.service /etc/systemd/system/
+#           sudo systemctl enable --now specialty-site
+[Unit]
+Description=Specialty Home Inspections website (static files)
+After=network.target
+
+[Service]
+User=REPLACE_WITH_YOUR_USER
+WorkingDirectory=/home/REPLACE_WITH_YOUR_USER/specialty-site
+ExecStart=/usr/bin/python3 tools/serve.py --root /home/REPLACE_WITH_YOUR_USER/specialty-site/published --host 127.0.0.1 --port 8080
+Restart=on-failure
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+# The anonymous visit counter writes here (and nowhere else)
+ReadWritePaths=/home/REPLACE_WITH_YOUR_USER/specialty-site/data
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

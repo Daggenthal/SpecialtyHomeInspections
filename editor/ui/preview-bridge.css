@@ -1,0 +1,15 @@
+/* Editor preview only. */
+html { scroll-behavior: auto !important; }
+.shi-editing [data-path] { cursor: pointer; transition: outline-color .15s ease; outline: 2px dashed transparent; outline-offset: 4px; border-radius: 6px; }
+.shi-editing [data-path]:hover { outline-color: rgba(211, 51, 58, .7); }
+.shi-editing section[data-path]:hover { outline-color: transparent; }
+
+.shi-pop { position: fixed; inset: 0; z-index: 1000; background: rgba(10, 18, 35, .45); display: grid; place-items: center; padding: 16px; }
+.shi-pop-card { background: #fff; color: #14203a; border-radius: 16px; padding: 20px 22px; max-width: 360px; width: 100%; box-shadow: 0 24px 70px rgba(0, 0, 0, .35); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.shi-pop-card p { margin: 0 0 8px; }
+.shi-pop-title { font-weight: 700; font-size: 18px; }
+.shi-pop-value { font-weight: 700; font-size: 20px; color: #1b3a8c; word-break: break-all; }
+.shi-pop-note { color: #5d6880; font-size: 14px; }
+.shi-pop-row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; margin-top: 12px; }
+.shi-pop-row button { font: 600 15px system-ui, sans-serif; border-radius: 10px; padding: 9px 14px; border: 1px solid #d3dae6; background: #fff; color: #14203a; cursor: pointer; }
+.shi-pop-row button.primary { background: #d3333a; border-color: #d3333a; color: #fff; }

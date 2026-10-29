@@ -1,0 +1,848 @@
+{
+  "schema": 1,
+  "business": {
+    "name": "Specialty Home Inspections LLC",
+    "owner": "John Ellis",
+    "founded": "2011-08-31",
+    "credential": "State of Florida Certified Real Estate Inspector",
+    "serviceArea": "Serving Pensacola Florida and Surrounding Areas",
+    "phone": "850-791-4994",
+    "email": "specialtyhomeinspections@gmail.com",
+    "city": "Pace",
+    "region": "FL",
+    "siteUrl": "https://specialtyhomeinspections.biz",
+    "logo": {
+      "src": "media/logo.jpg",
+      "alt": "Specialty Home Inspections LLC logo",
+      "width": 763,
+      "height": 478,
+      "sha256": "3b7c85641176f946cf283d1774047ab6333909ee7458c80e20744e7b8c5d632a"
+    },
+    "favicon": "media/favicon.ico"
+  },
+  "links": {
+    "googleReviews": "https://www.google.com/search?q=specialty%20home%20inspections%20llc%20pace%20florida&oq=specialty%20home%20inspections%20llc%20pace%20florida&aqs=chrome..69i57.1730867j0j4&sourceid=chrome&ie=UTF-8#lrd=0x8890ec19daca3d8f:0x212646b6a6059ac4,1,,,",
+    "bbb": "https://www.bbb.org/us/fl/pace/profile/home-inspection/specialty-home-inspections-llc-0683-90068216#sealclick"
+  },
+  "social": [
+    {
+      "name": "Facebook",
+      "url": "https://www.facebook.com/SpecialtyHomeInspections",
+      "show": true
+    },
+    {
+      "name": "Twitter",
+      "url": "https://twitter.com",
+      "show": false
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com",
+      "show": false
+    }
+  ],
+  "hours": {
+    "show": true,
+    "timezone": "America/Chicago",
+    "zoneName": "Central Time",
+    "openText": "Open now",
+    "closedText": "Closed right now",
+    "schedule": [
+      {
+        "day": "Sunday",
+        "open": true,
+        "from": "05:00",
+        "to": "23:30"
+      },
+      {
+        "day": "Monday",
+        "open": true,
+        "from": "05:00",
+        "to": "23:30"
+      },
+      {
+        "day": "Tuesday",
+        "open": true,
+        "from": "05:00",
+        "to": "23:30"
+      },
+      {
+        "day": "Wednesday",
+        "open": true,
+        "from": "05:00",
+        "to": "23:30"
+      },
+      {
+        "day": "Thursday",
+        "open": true,
+        "from": "05:00",
+        "to": "23:30"
+      },
+      {
+        "day": "Friday",
+        "open": true,
+        "from": "05:00",
+        "to": "23:30"
+      },
+      {
+        "day": "Saturday",
+        "open": true,
+        "from": "05:00",
+        "to": "23:30"
+      }
+    ]
+  },
+  "stats": {
+    "enabled": true,
+    "endpoint": "/api/hit",
+    "respectPrivacySignals": true
+  },
+  "seo": {
+    "title": "Pensacola & Pace Florida Home Inspections | Specialty Home Inspections LLC",
+    "description": "Pensacola Florida home inspectors and Specialty Home Inspections LLC realizes that the purchase of a home is probably the largest and most exciting investment you will ever make. A home inspection will help you learn as much as you can about the property you are considering buying in an effort to help you make a more informed decision as a buyer.",
+    "keywords": "Pensacola Florida home inspectors, Pace Florida home inspections, John Ellis, Specialty Home Inspections LLC, home inspections, wind mitigation, four point inspection, drone roof inspection"
+  },
+  "theme": {
+    "navy": "#1b3a8c",
+    "red": "#d3333a",
+    "mode": "auto",
+    "animations": true,
+    "layout": "responsive"
+  },
+  "sections": [
+    {
+      "id": "home",
+      "type": "hero",
+      "enabled": true,
+      "nav": null,
+      "eyebrow": "Happily Serving Pensacola Florida, and its Surrounding Areas, for over {years} years",
+      "title": "Pensacola Florida Home Inspections",
+      "lead": "Our philosophy at **Specialty Home Inspections LLC** is to inspect each home with the utmost care, to be thorough, and to explain our findings clearly to each client. **John Ellis is a licensed home inspector.**",
+      "primaryButton": "Request a Quote",
+      "showCallButton": true
+    },
+    {
+      "id": "trust",
+      "type": "trust",
+      "enabled": true,
+      "nav": null,
+      "items": [
+        {
+          "image": "media/badge-veteran-owned.png",
+          "label": "Veteran Owned Business",
+          "note": "",
+          "link": ""
+        },
+        {
+          "image": "media/badge-bbb-a-plus.jpg",
+          "label": "BBB Rating: A+",
+          "note": "BBB Accredited Business",
+          "link": "bbb"
+        },
+        {
+          "image": "media/badge-discounts.jpg",
+          "label": "Police, Firefighter, Military Discounts",
+          "note": "Please ask when scheduling your inspection.",
+          "link": ""
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "type": "about",
+      "enabled": true,
+      "nav": "About",
+      "title": "John Ellis",
+      "photo": "media/john-ellis.jpg",
+      "photoAlt": "John Ellis, owner of Specialty Home Inspections LLC",
+      "photoCrop": {
+        "x": 0,
+        "y": 0,
+        "w": 309,
+        "h": 309
+      },
+      "body": "John Ellis is a Pensacola Florida Home Inspector, providing unbiased, accurate, and thorough home inspections in Pensacola Florida and the surrounding areas. Mr. Ellis owns and operates Specialty Home Inspections LLC.  Mr. Ellis provides both informative, and reliable information to home owners and home buyers throughout the greater Pensacola Florida area.\n\nMr. Ellis is always thorough and enjoys taking the time to inspect the home with the client, to answer questions, and to give advice about repairs. Mr. Ellis is a field-experienced inspector and follows national standards as well as those of the State of Florida.\n\nWhen you need a home inspection, don't hesitate to call Specialty Home Inspections LLC. If you own your home, Mr. Ellis will give you a cost and commitment-free consultation. Trust John Ellis to tell you nothing but the truth about your home.\n\nCome talk to Specialty Home Inspections LLC today, and learn more about how we can help you."
+    },
+    {
+      "id": "why",
+      "type": "text",
+      "enabled": true,
+      "nav": null,
+      "title": "Why a Home Inspection matters",
+      "body": "**Specialty Home Inspections LLC** realizes that the purchase of a home is probably the **largest and most exciting investment you will ever make.** It is difficult to remove any emotional attachment you may have for a home due to it's location, style, setting, etc. A home inspection will help you learn as much as you can about the property you are considering buying in an effort to **help you make a more informed decision as a buyer.**\n\nWhether you need a pre-purchase, pre-list, or general home inspection, a **Specialty Home Inspections LLC** inspector is available to discuss how our services can meet your needs. Our impartial and experienced inspector can help you make an educated real estate investment. We will discuss with you the [top 10 defects](#defects) found in most homes\n\n**Specialty Home Inspections LLC** follows the [InterNACHI Standards of Practice](https://www.nachi.org/sop.htm), the [InterNACHI Code of Ethics](https://www.nachi.org/code_of_ethics.htm) as well as the State of Florida standards.\n\n**Specialty Home Inspections LLC** would like to provide you a [Virtual Home Inspection Tour](https://www.youtube.com/watch?v=tTfFIeGCnMQ), created by the American Society of Home Inspectors."
+    },
+    {
+      "id": "services",
+      "type": "services",
+      "enabled": true,
+      "nav": "Services",
+      "title": "Services",
+      "intro": "The decision to sell or purchase a home is an important decision, and how better to proceed than with accurate and reliable information about the property in question.\n\nAll inspections from Specialty Home Inspections LLC evaluate all interior and exterior components and systems including the roof, basement, heating, cooling, ventilation, insulation, plumbing, structure, electrical, and the lot.",
+      "items": [
+        "360° Degree Photography Available on Inspections",
+        "Aerial Drone Roof Inspections",
+        "Apartment Building Inspections",
+        "Apartment Complex Inspections",
+        "Basement Inspections",
+        "Builder Warranty Inspections",
+        "Chinese Drywall Inspections",
+        "Crawlspace Inspections",
+        "Electrical Inspections",
+        "Foreclosure Inspections",
+        "Foundation Inspections",
+        "Four Point Inspections",
+        "HVAC Inspections",
+        "Insurance Inspections",
+        "Investor Property Inspections",
+        "Multi Family Inspections",
+        "New Construction Inspections",
+        "Plumbing Inspections",
+        "Pre Delivery Inspections",
+        "Pre List Inspections",
+        "Pre Purchase Inspections",
+        "Roof Inspections",
+        "Structural Inspections",
+        "Thermal Imaging Inspections",
+        "Wind Mitigation Inspections"
+      ],
+      "highlightsTitle": "With so many great reasons to work with Specialty Home Inspections LLC, why would you choose someone else?",
+      "highlights": [
+        "{years} Years of Professional Service since {since}",
+        "Comprehensive and professional services",
+        "Inspections cover every part of the home from the roof to the foundation",
+        "Licensed Home Inspectors",
+        "Follow Standards of Practice for the State of Florida",
+        "Clear written report free of technical jargon",
+        "Help set priorities for repairs",
+        "Very reasonable rates",
+        "Satisfaction guaranteed"
+      ]
+    },
+    {
+      "id": "pricing",
+      "type": "pricing",
+      "enabled": true,
+      "nav": "Pricing",
+      "title": "Standard Inspection for Single Family Homes",
+      "rows": [
+        {
+          "name": "Up to 2500 square foot",
+          "price": "$300"
+        },
+        {
+          "name": "Four Point",
+          "price": "$150"
+        },
+        {
+          "name": "Wind Mitigation",
+          "price": "$150"
+        },
+        {
+          "name": "Four Point / Wind Mitigation Combo Inspection",
+          "price": "$250"
+        }
+      ],
+      "note": "Please email, phone or text us with any questions regarding Scheduling a Home Inspection or Requesting a Quote"
+    },
+    {
+      "id": "reports",
+      "type": "feature",
+      "enabled": true,
+      "nav": "Sample Reports",
+      "kicker": "",
+      "title": "Sample Reports",
+      "image": "media/sample-report-cover.jpg",
+      "imageAlt": "Sample home inspection report",
+      "imageLink": "https://app.spectora.com/home-inspectors/my-inspection-company-0796f8fec4/sample_report?sample_id=26192",
+      "body": "",
+      "buttonText": "Click Here To View Samples",
+      "buttonUrl": "https://app.spectora.com/home-inspectors/my-inspection-company-0796f8fec4/sample_report?sample_id=26192",
+      "button2Text": "",
+      "button2Url": ""
+    },
+    {
+      "id": "photo360",
+      "type": "feature",
+      "enabled": true,
+      "nav": null,
+      "kicker": "NEW",
+      "title": "360° Photography",
+      "image": "",
+      "imageAlt": "",
+      "body": "At **Specialty Home Inspections LLC** we take 360-degree images of the exterior and every room of your house. These images allow you to to look left, right, up, down and zoom into every picture we take. This will allow you to have a complete record of the condition of the house on the day of the inspection. Since we take 360 photos for free at every house that means that every house gets to have 360 images taken of it. This is great if you love the way the previous owner decorated the house, or if you want to have a wonderful record of the house before the big remodel project! We started using 360 photos since many of our customers either purchase the house sight unseen or only have a limited amount of time to familiarize themselves with the house. Our 360 photos allow you to tour the house from your cell phone or computer. Our customers have also leveraged the 360 photos to help contractors provide accurate quotes and help interior designers to build off of the existing floor plan and color scheme.",
+      "buttonText": "Sample 360° Photos in Sample Report",
+      "buttonUrl": "https://app.spectora.com/home-inspectors/my-inspection-company-0796f8fec4/sample_report?sample_id=26192"
+    },
+    {
+      "id": "drones",
+      "type": "feature",
+      "enabled": true,
+      "nav": null,
+      "kicker": "",
+      "title": "Aerial Drone Roof Inspections",
+      "image": "media/drone-roof.jpg",
+      "imageAlt": "Aerial view of a roof",
+      "body": "Because **Specialty Home Inspections LLC** chooses not to walk on any roof surface that could cause damage, we can use technology to fully evaluate the current condition of the roof. **Aerial Drone technology** eliminates all contact with the roof, gives the inspector high-definition photography images.\n\n**Specialty Home Inspections LLC adheres to FAA Flight regulations for Drone roof inspections**. FAA regulations restrict the proximity to airports and designated “no fly zones”. When a home is within those FAA restricted areas our inspectors use other methods to inspect roof surfaces.",
+      "buttonText": "",
+      "buttonUrl": ""
+    },
+    {
+      "id": "reviews",
+      "type": "reviews",
+      "enabled": true,
+      "nav": "Reviews",
+      "title": "Reviews",
+      "linkText": "Click Here To Read Additional Reviews on Google",
+      "items": [
+        {
+          "quote": "John is incredibly thorough. We hired him to inspect our new build home and he did a great job. He pointed out the smallest flaws and explained how to correct them. He didn't make fun of us for not knowing things about the house and did a good job explaining his process. I can't rave enough about how happy we are with his services. We will be using him again going forward. I cannot recommend him enough.",
+          "name": "Leah Fox - Client",
+          "locked": true,
+          "hidden": false,
+          "quoteSha256": "5e5160e72bc13130b7a2d19d27c933606c6c0bd56f34766fcc4ebdfaf2348269",
+          "nameSha256": "39578c275b0a6d0fb3c4ccfe14e3849053d8eb4dd49c5e6c6cb45271575fa8b1"
+        },
+        {
+          "quote": "John did a great inspection for us and answered all of our questions. Our wind mitigation saved us a great deal of money off our insurance premiums. I'll definitely use him again.",
+          "name": "Mike Schafer - Client",
+          "locked": true,
+          "quoteSha256": "5e1614397296f734418b74b8931bc994e1e071498d2c8c7d5ee6183e49953bee",
+          "nameSha256": "217de528330be4d40f66b965094fb7534ff47a7fd4b4458ff61bdd694ddb5050"
+        },
+        {
+          "quote": "Very professional and thorough. Would recommend to anyone needing an inspection preformed.",
+          "name": "Greg Smith - Client",
+          "locked": true,
+          "quoteSha256": "8609455b7dcaab84a5407d918fce83930afbcf97e1447b6292d1ae84320c0d1d",
+          "nameSha256": "ff98b136ca55596dec1e9ada02ce610879829ff3a165ac893e9431fff13ec4bd"
+        },
+        {
+          "quote": "Called this afternoon with a few questions and the man went above and beyond to informs. Need more people in the world that will take the time to help someone. Thank you sir",
+          "name": "Joseph Weston - Client",
+          "locked": true,
+          "quoteSha256": "ded2fc25c1fe989ff879d6bf199c7ca00380611fa4595ee8dc5fa76bf18bb43c",
+          "nameSha256": "e2b06397bb0d4e6cc9fb9af68ba9b2fb1acd56082e4670111cf3987f944d2bf6"
+        }
+      ]
+    },
+    {
+      "id": "defects",
+      "type": "list",
+      "enabled": true,
+      "nav": null,
+      "title": "Top 10 Defects Per Specialty Home Inspections LLC",
+      "intro": "Knowing some of the usual defects inspectors discover during an inspection allows you to be a well informed buyer. Specialty Home Inspections LLC has compiled a list of the top 10 defects found in most homes. Repairs or replacement could cost or save you thousands of dollars. Feel free to contact us with any questions you may have regarding possible problems in your home.",
+      "numbered": true,
+      "items": [
+        "Leaking Polybutylene fresh water plumbing pipes visible inside the crawl space",
+        "Defective hardboard siding. This is a moisture and installation related defect. Common brands of siding are Florida Pacific, Louisiana Pacific, and Masonite",
+        "Cracked and blistering shingles allowing leaks visible inside the attic",
+        "Defective ground fault circuit breaker interrupter outlets in bathrooms, kitchen, garage, and outside",
+        "Visible open wire connections in the crawl space and attic",
+        "Leaking or loosely mounted toilets",
+        "Rotten floor joist and band joist at the front and rear door areas visible inside the crawl space",
+        "Cracked or broken concrete block piers inside the crawl space",
+        "Wet and damp crawl spaces",
+        "Cracks in the furnace heat exchanger allowing carbon monoxide to filter inside the house"
+      ]
+    },
+    {
+      "id": "faq",
+      "type": "faq",
+      "enabled": true,
+      "nav": "FAQ",
+      "title": "Frequently Asked Questions",
+      "intro": "Specialty Home Inspections LLC believes there are ten important questions you should have answered before you select your home inspector. If you have questions in addition to the 10 listed below, please call, text or email us and we will address those as well.",
+      "items": [
+        {
+          "q": "How long does a home inspection take ?",
+          "a": "A general home inspection normally takes 2-3 hours to complete."
+        },
+        {
+          "q": "When can I expect the reports to be delivered ?",
+          "a": "The delivery time depends on the current workload. Most reports are delivered via email within 24 hrs after completing the inspection."
+        },
+        {
+          "q": "When do I need to pay for the inspection and how do I do so ?",
+          "a": "Payment is due at the time of inspection. If you are unable to attend and would like an online electronic invoice we'll be happy to provide one for you. We accept all major credit cards, checks, and cash."
+        },
+        {
+          "q": "Can I attend the home inspection ?",
+          "a": "You are always welcome to attend any home inspection and are openly encouraged to do so as it makes answering questions much easier."
+        },
+        {
+          "q": "Do you provide any warranties ?",
+          "a": "We do not offer any warranties since our inspections are for the day and time that we are there. We can not predict the future or what lady luck will toss our way."
+        },
+        {
+          "q": "Do you require a contract for your services ?",
+          "a": "We do require a pre-inspection agreement before providing services."
+        },
+        {
+          "q": "Do you offer any discounts ?",
+          "a": "We offer a $25 discount to all currently active duty military personnel on all home inspections.",
+          "allowAmount": true
+        },
+        {
+          "q": "Do your inspection reports have digital pictures ?",
+          "a": "Yes. All of our reports have digital pictures in them."
+        },
+        {
+          "q": "Do you price match other inspectors quotes ?",
+          "a": "No. Often times a lower price is a direct representation of a less experienced inspector. Often, you get what you pay for in this business and I highly suggest that you do not make a decision on a $100,000+ home that may take as many as thirty years to pay off based off of $25-$50 price reduction."
+        },
+        {
+          "q": "Do you perform mold/mildew, WDO (Wood Destroying Organism), or septic inspections",
+          "a": "No. The mold inspector performs mold inspections, the pest inspector performs WDO inspections, and the septic companies perform septic/sewer inspections. This is how the Florida law is governed for those areas of inspection. We do however report anything that appears to be an issue in those areas and make recommendations for further inspections as needed."
+        }
+      ]
+    },
+    {
+      "id": "credentials",
+      "type": "badges",
+      "enabled": true,
+      "nav": "Credentials",
+      "title": "Certifications & Memberships",
+      "intro": "",
+      "featured": [
+        {
+          "image": "media/badge-pilot-institute-2021.jpg",
+          "alt": "Pilot Institute Class of 2021 Graduate",
+          "link": "https://pilotinstitute.com"
+        }
+      ],
+      "items": [
+        {
+          "image": "media/certs/1041.jpg",
+          "alt": "Angie's List Super Service Award"
+        },
+        {
+          "image": "media/certs/1042.jpg",
+          "alt": "HomeAdvisor Screened & Approved"
+        },
+        {
+          "image": "media/certs/1043.jpg",
+          "alt": "Services of HomeGauge Inspectors"
+        },
+        {
+          "image": "media/certs/1044.jpg",
+          "alt": "AHIT Certified Inspector"
+        },
+        {
+          "image": "media/certs/1045.jpg",
+          "alt": "ASHI American Society of Home Inspectors"
+        },
+        {
+          "image": "media/certs/1046.jpg",
+          "alt": "CMI Certified Master Inspector",
+          "hidden": true
+        },
+        {
+          "image": "media/certs/1047.jpg",
+          "alt": "Veteran Owned Business"
+        },
+        {
+          "image": "media/certs/1048.jpg",
+          "alt": "InterNACHI Certified Indoor Air Quality Inspector"
+        },
+        {
+          "image": "media/certs/1034.jpg",
+          "alt": "InterNACHI Certified Home Inspector"
+        },
+        {
+          "image": "media/certs/1027.jpg",
+          "alt": "InterNACHI Certified Four Point Inspector"
+        },
+        {
+          "image": "media/certs/1028.jpg",
+          "alt": "InterNACHI Certified Wind Mitigation Inspector"
+        },
+        {
+          "image": "media/certs/1024.jpg",
+          "alt": "Infrared Certified"
+        },
+        {
+          "image": "media/certs/1001.jpg",
+          "alt": "InterNACHI Certified 11th Month Warranty Inspections"
+        },
+        {
+          "image": "media/certs/1002.jpg",
+          "alt": "InterNACHI Annual Home Maintenance Inspections"
+        },
+        {
+          "image": "media/certs/1003.jpg",
+          "alt": "InterNACHI Certified Chimney Inspector"
+        },
+        {
+          "image": "media/certs/1004.jpg",
+          "alt": "InterNACHI Certified Crawlspace Inspector"
+        },
+        {
+          "image": "media/certs/1005.jpg",
+          "alt": "InterNACHI Certified Deck Inspector"
+        },
+        {
+          "image": "media/certs/1006.jpg",
+          "alt": "InterNACHI Certified Exterior Inspector"
+        },
+        {
+          "image": "media/certs/1007.jpg",
+          "alt": "First Time Home Buyer Friendly"
+        },
+        {
+          "image": "media/certs/1008.jpg",
+          "alt": "IAC2 Certified, Radon Certified, Mold Certified"
+        },
+        {
+          "image": "media/certs/1009.jpg",
+          "alt": "InterNACHI Certified Mold Inspector"
+        },
+        {
+          "image": "media/certs/1010.jpg",
+          "alt": "Residential Property Inspector"
+        },
+        {
+          "image": "media/certs/1011.jpg",
+          "alt": "InterNACHI Certified Kitchen Inspector"
+        },
+        {
+          "image": "media/certs/1012.jpg",
+          "alt": "InterNACHI Certified Moisture Intrusion Inspector"
+        },
+        {
+          "image": "media/certs/1013.jpg",
+          "alt": "InterNACHI Certified Plumbing Inspector"
+        },
+        {
+          "image": "media/certs/1014.jpg",
+          "alt": "InterNACHI Certified Radon Tester"
+        },
+        {
+          "image": "media/certs/1015.jpg",
+          "alt": "InterNACHI Certified Roof Inspector"
+        },
+        {
+          "image": "media/certs/1016.jpg",
+          "alt": "InterNACHI Certified WDO Inspector"
+        },
+        {
+          "image": "media/certs/1017.jpg",
+          "alt": "InterNACHI Certified Structure & Foundation Inspector"
+        },
+        {
+          "image": "media/certs/1018.jpg",
+          "alt": "InterNACHI Certified Home Inspector"
+        },
+        {
+          "image": "media/certs/1019.jpg",
+          "alt": "InterNACHI Certified Safe Workplace Inspector"
+        },
+        {
+          "image": "media/certs/1020.jpg",
+          "alt": "InterNACHI Certified Stucco Inspector"
+        },
+        {
+          "image": "media/certs/1021.jpg",
+          "alt": "InterNACHI Certified Commercial Inspector"
+        },
+        {
+          "image": "media/certs/1022.jpg",
+          "alt": "InterNACHI Certified Electrical Inspector"
+        },
+        {
+          "image": "media/certs/1023.jpg",
+          "alt": "InterNACHI Certified HVAC Inspector"
+        },
+        {
+          "image": "media/certs/1025.jpg",
+          "alt": "InterNACHI Certified Residential Fire Extinguisher Inspector"
+        },
+        {
+          "image": "media/certs/1026.jpg",
+          "alt": "InterNACHI Certified Home Energy Auditor"
+        },
+        {
+          "image": "media/certs/1029.jpg",
+          "alt": "InterNACHI Honor Guarantee"
+        },
+        {
+          "image": "media/certs/1030.jpg",
+          "alt": "InterNACHI Certified Mobile Home Inspector"
+        },
+        {
+          "image": "media/certs/1031.jpg",
+          "alt": "InterNACHI Certified Professional Inspector (CPI)"
+        },
+        {
+          "image": "media/certs/1032.jpg",
+          "alt": "InterNACHI Certified Pool & Spa Inspector"
+        },
+        {
+          "image": "media/certs/1033.jpg",
+          "alt": "InterNACHI Certified Septic Inspector"
+        },
+        {
+          "image": "media/certs/1035.jpg",
+          "alt": "Remote Image Capturing"
+        },
+        {
+          "image": "media/certs/1036.jpg",
+          "alt": "Notary Public"
+        },
+        {
+          "image": "media/certs/1037.jpg",
+          "alt": "InterNACHI Certified Garage Inspector"
+        },
+        {
+          "image": "media/certs/1038.jpg",
+          "alt": "Dog badge"
+        },
+        {
+          "image": "media/certs/1039.jpg",
+          "alt": "Pet Friendly"
+        },
+        {
+          "image": "media/certs/1040.jpg",
+          "alt": "InterNACHI Certified Repair Verification"
+        }
+      ]
+    },
+    {
+      "id": "gallery",
+      "type": "gallery",
+      "enabled": true,
+      "nav": "Gallery",
+      "title": "Gallery",
+      "intro": "",
+      "items": []
+    },
+    {
+      "id": "resources",
+      "type": "links",
+      "enabled": true,
+      "nav": null,
+      "title": "Useful Information",
+      "groups": [
+        {
+          "title": "Useful Information from Specialty Home Inspections LLC",
+          "links": [
+            {
+              "text": "Virtual Home Inspection Tour",
+              "url": "https://www.youtube.com/watch?v=tTfFIeGCnMQ",
+              "note": ""
+            },
+            {
+              "text": "Top 10 Defects Found in Homes",
+              "url": "#defects",
+              "note": ""
+            },
+            {
+              "text": "Well Information",
+              "url": "https://www.ainspect.com/CMContent/wells/wells.html",
+              "note": ""
+            },
+            {
+              "text": "Septic Information",
+              "url": "https://www.ainspect.com/CMContent/septic/septic_tank.html",
+              "note": ""
+            },
+            {
+              "text": "Radon Information",
+              "url": "https://www.ainspect.com/CMContent/Radon_Info/radon-def.html",
+              "note": ""
+            },
+            {
+              "text": "Mold Information",
+              "url": "https://www.ainspect.com/CMContent/Mold_Info/mold-def.html",
+              "note": ""
+            },
+            {
+              "text": "Asbestos Information",
+              "url": "https://www.ainspect.com/CMContent/Asbestos_Testing/asbestos.html",
+              "note": ""
+            },
+            {
+              "text": "Swimming Pools",
+              "url": "https://www.ainspect.com/CMContent/pool/pool.html",
+              "note": ""
+            },
+            {
+              "text": "Air Quality",
+              "url": "https://www.ainspect.com/CMContent/air_quality/air-def.html",
+              "note": ""
+            },
+            {
+              "text": "Water Quality",
+              "url": "https://www.ainspect.com/CMContent/water_testing/water.html",
+              "note": ""
+            },
+            {
+              "text": "Aluminum Wiring",
+              "url": "https://www.ainspect.com/CMContent/aluminum/aluminum.html",
+              "note": ""
+            },
+            {
+              "text": "Polybutylene Piping",
+              "url": "https://www.ainspect.com/CMContent/poly/poly.html",
+              "note": ""
+            },
+            {
+              "text": "EIFS Information",
+              "url": "https://www.ainspect.com/CMContent/eifs/eifs-def.html",
+              "note": ""
+            },
+            {
+              "text": "Termite Information",
+              "url": "https://www.apestcontrol.com/pests/default.asp?action=termite",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "title": "Home Improvement and Maintenance",
+          "links": [
+            {
+              "text": "The Home Depot",
+              "url": "https://www.homedepot.com",
+              "note": ""
+            },
+            {
+              "text": "Lowe's",
+              "url": "https://www.lowes.com",
+              "note": ""
+            },
+            {
+              "text": "Do It Yourself",
+              "url": "https://www.doityourself.com",
+              "note": "doityourself.com"
+            },
+            {
+              "text": "Improvenet.com",
+              "url": "https://www.improvenet.com/index.html?src=homehero",
+              "note": "Locate prescreened contractors for bids, designers, planning and remodeling etc…"
+            },
+            {
+              "text": "Hometime",
+              "url": "https://www.hometime.com",
+              "note": ""
+            },
+            {
+              "text": "Today's Homeowner",
+              "url": "https://www.todayshomeowner.com",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "title": "Helpful Links",
+          "links": [
+            {
+              "text": "Mortgage Calculator",
+              "url": "https://www.mortgagecalculator.org/helpful-advice/home-safety-checklist.php",
+              "note": ""
+            },
+            {
+              "text": "Lead Information",
+              "url": "https://www.epa.gov/lead",
+              "note": ""
+            },
+            {
+              "text": "EIFS Info",
+              "url": "https://homebuying.about.com/cs/syntheticstucco/a/eifs_facts.htm",
+              "note": ""
+            },
+            {
+              "text": "Home Repair Help",
+              "url": "https://homerepair.about.com",
+              "note": ""
+            },
+            {
+              "text": "Masonite Siding",
+              "url": "https://www.servicemagic.com/article.show.Masonite-Siding-A-Stronger-Alternative.13652.html",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "title": "Government",
+          "links": [
+            {
+              "text": "Consumer Product Safety Commission",
+              "url": "https://www.cpsc.gov",
+              "note": ""
+            },
+            {
+              "text": "Department of Labor",
+              "url": "https://www.dol.gov",
+              "note": ""
+            },
+            {
+              "text": "Fannie Mae",
+              "url": "https://www.fanniemae.com",
+              "note": ""
+            },
+            {
+              "text": "Federal Emergency Management Agency",
+              "url": "https://www.fema.gov",
+              "note": ""
+            },
+            {
+              "text": "Freddie Mac",
+              "url": "https://www.freddiemac.com",
+              "note": ""
+            },
+            {
+              "text": "HUD'S Home Page",
+              "url": "https://www.hud.gov",
+              "note": ""
+            },
+            {
+              "text": "Small Business Administration",
+              "url": "https://www.sba.gov",
+              "note": ""
+            },
+            {
+              "text": "U.S. Bureau of the Census",
+              "url": "https://www.census.gov",
+              "note": ""
+            },
+            {
+              "text": "Environmental Protection Agency",
+              "url": "https://www.epa.gov",
+              "note": ""
+            },
+            {
+              "text": "Habitat for Humanity International",
+              "url": "https://www.habitat.org",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "title": "Real Estate Related Links",
+          "links": [
+            {
+              "text": "Homefair",
+              "url": "https://www.homefair.com/homefair/servlet/ActionServlet?pid=27&cid=homefair",
+              "note": "crime stats, cost of living (salary) comparison and more"
+            },
+            {
+              "text": "HomeGain.com",
+              "url": "https://homegain.com",
+              "note": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "type": "contact",
+      "enabled": true,
+      "nav": "Contact",
+      "title": "Request a Quote",
+      "body": "Please email, phone or text us with any questions regarding Scheduling a Home Inspection or Requesting a Quote"
+    }
+  ],
+  "qrCodes": []
+}

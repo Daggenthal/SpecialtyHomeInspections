@@ -1,0 +1,10 @@
+# Example Cloudflare Tunnel config for the Pi (~/.cloudflared/config.yml).
+# Only the public website goes through the tunnel. NEVER add the editor (port 8787) here.
+# (The editor refuses tunnel traffic anyway, but don't rely on that alone.)
+tunnel: REPLACE_WITH_TUNNEL_ID
+credentials-file: /home/REPLACE_WITH_YOUR_USER/.cloudflared/REPLACE_WITH_TUNNEL_ID.json
+
+ingress:
+  - hostname: test.YOUR-DOMAIN.com          # e.g. a test subdomain on your own domain first
+    service: http://127.0.0.1:8080
+  - service: http_status:404
